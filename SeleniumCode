@@ -1,0 +1,135 @@
+//Selenium code to test "Registartion Page" and "Login Page" of "Guru Demo Insurance Website(http://demo.guru99.com/insurance/v1/index.php/" )
+
+
+package checkinh;
+
+import java.util.Iterator;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+
+
+
+public class RegistrationPage {
+	public static void main(String args[]) throws InterruptedException
+	{
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\chromedriver.exe");
+		WebDriver driver  = new ChromeDriver();
+		driver.get( "http://demo.guru99.com/insurance/v1/index.php");
+		driver.manage().window().maximize();
+		Thread.sleep(4000);
+		registerbutton(driver);
+		submitform(driver);
+		waitForAlertBanner(driver);
+		Assert.assertEquals("Login",getreturnText(driver));
+		Login(driver);
+	}
+	//Clicking on register button from home page and checking page opened is  "Sign up page"
+	public static void registerbutton(WebDriver driver)  {
+		
+		driver.findElement(By.linkText("Register")).click();
+		WebElement title = driver.findElement(By.xpath("/html/body/div[3]/h1")); 
+		String text=title.getText();
+		Assert.assertEquals("Sign up as a new user", text);
+	    System.out.println("Register page opened");
+	
+	
+	}
+	// Getting control to new page and FIlling the form to register 
+	public static void submitform(WebDriver driver) throws InterruptedException {
+		String mainwindow= driver.getWindowHandle();
+		Set<String> s1 =driver.getWindowHandles();
+		Iterator<String> i1=s1.iterator();
+		while(i1.hasNext())			
+		{		
+		    String ChildWindow=i1.next();		
+		    		
+		    if(mainwindow.equals(ChildWindow))			
+		    {
+		    	driver.switchTo().window(ChildWindow);
+		    	Select dropdown = new Select(driver.findElement(By.id("user_title")));
+		    	dropdown.selectByVisibleText("Mrs");
+		    	Thread.sleep(1000);
+		    	driver.findElement(By.id("user_firstname")).sendKeys("RRR");
+		    	Thread.sleep(1000);
+		    	driver.findElement(By.id("user_surname")).sendKeys("JJJ");
+		    	Thread.sleep(1000);
+		    	driver.findElement(By.id("user_phone")).sendKeys("1115439844");
+		    	Thread.sleep(3000);
+		    	Select year = new Select (driver.findElement(By.id("user_dateofbirth_1i")));
+		    	Thread.sleep(1000);
+		    	year.selectByVisibleText("1989");
+		    	Thread.sleep(1000);
+		    	Select month = new Select (driver.findElement(By.id("user_dateofbirth_2i")));
+		    	Thread.sleep(1000);
+		    	month.selectByVisibleText("September");
+		    	Thread.sleep(1000);
+		    	Select date = new Select (driver.findElement(By.id("user_dateofbirth_3i")));
+		    	Thread.sleep(1000);
+		    	date.selectByVisibleText("8");
+		    	Thread.sleep(1000);
+		    	driver.findElement(By.id("licencetype_f")).click();
+		    	Thread.sleep(1000);
+		    	Select license = new Select (driver.findElement(By.id("user_licenceperiod")));
+		    	license.selectByVisibleText("8");
+		    	
+		    		driver.findElement(By.cssSelector("option[value='12']")).click();
+		    		driver.findElement(By.name("street")).sendKeys("776 Loop Loop");
+		    		driver.findElement(By.name("city")).sendKeys("City" );
+		    		driver.findElement(By.name("county")).sendKeys("County" );
+		    		driver.findElement(By.name("post_code")).sendKeys("7866" );
+		    		Thread.sleep(3000);
+		    		driver.findElement(By.name("email")).sendKeys("r2020@gmail.com" );
+		    		Thread.sleep(3000);
+		    		driver.findElement(By.name("password")).sendKeys("r2" );
+		    		Thread.sleep(3000);
+		    		driver.findElement(By.name("c_password")).sendKeys("r2" );
+		    		Thread.sleep(4000);
+		    		driver.findElement(By.name("submit")).click();	
+		    		
+		    		}}}
+		
+	//Waiting for Login page
+		public static void waitForAlertBanner(WebDriver driver)
+		{
+			WebDriverWait wait= new WebDriverWait(driver,11);
+			wait.until((ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[3]/h3"))));
+			 
+		}
+		
+	public static String getreturnText(WebDriver driver)
+		{
+			return driver.findElement(By.xpath("/html/body/div[3]/h3")).getText();
+		}
+	
+		//Getting control of login page and signing in
+	public static void Login(WebDriver driver) throws InterruptedException {
+			String mainwindow= driver.getWindowHandle();
+			Set<String> s1 =driver.getWindowHandles();
+			Iterator<String> i1=s1.iterator();
+			while(i1.hasNext())			
+			{		
+			    String ChildWindow=i1.next();		
+			    		
+			    if(mainwindow.equals(ChildWindow))			
+			    {
+			    	driver.switchTo().window(ChildWindow);
+			    	
+			    	driver.findElement(By.name("email")).sendKeys("r2020@gmail.com");
+			    	Thread.sleep(1000);
+			    	driver.findElement(By.name("password")).sendKeys("r2");
+			    	Thread.sleep(1000);
+			    	driver.findElement(By.name("submit")).click();
+			    	WebElement title = driver.findElement(By.xpath("//*[@id=\"tabs-1\"]/h2")); 
+					String text=title.getText();
+					Assert.assertEquals("Broker Insurance WebPage", text);
+				    System.out.println("Sucessfully signed in");
+              }}}
+}
